@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  api:
+    container_name: dexscreener_frames_api
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dev
+    image: dexscreener_frames_api
+    restart: always
+    env_file: ./.env
+    volumes:
+      - ./src:/app/src
+      - ./spec.json:/app/spec.json
+    networks:
+      - dexscreener
+    environment:
+      NODE_ENV: production
+
+    ports:
+      - "5000:5000"
+
+networks:
+  dexscreener:
+    name: dexscreener
+    driver: bridge

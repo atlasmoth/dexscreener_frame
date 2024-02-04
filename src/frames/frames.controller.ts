@@ -1,8 +1,7 @@
 import { errorInterceptor } from "../middleware";
 import { Pair } from "../utils/canvas";
+import { table } from "../utils/storage";
 import * as framesService from "./frames.service";
-
-const table: Record<string, Pair[]> = {};
 
 export const beginFrame = errorInterceptor(async (req, res) => {
   framesService.handleEmptySearch(res);
