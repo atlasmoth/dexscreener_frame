@@ -2,9 +2,10 @@
 
 By [osuji.eth](https://warpcast.com/osuji.eth)
 
-|                 |                        |                     |     |
-| --------------- | ---------------------- | ------------------- | --- |
-| ![](/first.jpg) | ![Filter](/second.jpg) | ![Cast](/third.jpg) |
+| ![First](/first.jpg) | ![Filter](/second.jpg) | ![Cast](/third.jpg) |
+| -------------------- | ---------------------- | ------------------- |
+
+|
 
 ## Build Server image
 
