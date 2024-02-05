@@ -301,3 +301,76 @@ export type Pair = {
   fdv: number;
   pairCreatedAt: number;
 };
+
+export const printMenu = async (
+  label: string,
+  subLabel: string,
+  items: {
+    id: number;
+    heading: string;
+    subheading: string;
+    text: string;
+    selected: boolean;
+  }[]
+) => {
+  const canvas = createCanvas(760, 400);
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#1d1d22";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.drawImage(img, 10, 10, 20, 20);
+  ctx.font = "16px Space Grotesk";
+  ctx.fillStyle = "#fff";
+  ctx.fillText(label, 40, 25);
+
+  ctx.font = "400 14px Poppins";
+  ctx.fillStyle = "#fff";
+  ctx.fillText(subLabel, 10, 50);
+  items.forEach((t, index) => {
+    drawRowNew(ctx, index + 1, 80, t.heading, t.selected);
+  });
+  const fileExt = `${Math.random().toString().slice(-15)}_${Date.now()}.png`;
+  const filePath = path.join(__dirname, `../public/${fileExt}`);
+  const out = fs.createWriteStream(filePath);
+  const stream = canvas.createPNGStream();
+  return new Promise((resolve, reject) => {
+    stream.pipe(out);
+
+    out.on("finish", () => {
+      logger.info(`The png file ${filePath} was created.`);
+      resolve(fileExt);
+    });
+
+    out.on("error", (err) => {
+      reject(err);
+    });
+  });
+};
+
+function drawRowNew(
+  ctx: CanvasRenderingContext2D,
+  index: number,
+  baseVertical = 80,
+  content: string,
+  underline?: boolean
+) {
+  const y = (index - 1) * 30 + baseVertical;
+  ctx.font = "400 14px Poppins";
+  ctx.fillStyle = "#808080";
+  ctx.fillText(`#${index}`, 10, y);
+
+  ctx.font = "400 14px Poppins";
+  ctx.fillStyle = "#fff";
+  ctx.fillText(content, 50, y);
+
+  if (underline) {
+    ctx.strokeStyle = "rgba(200, 200, 200, 0.7)";
+    ctx.setLineDash([2, 2]);
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+    ctx.moveTo(50, y + 7);
+    ctx.lineTo(50 + ctx.measureText(content).width, y + 7);
+    ctx.stroke();
+  }
+}
