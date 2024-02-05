@@ -374,3 +374,74 @@ function drawRowNew(
     ctx.stroke();
   }
 }
+
+export const printMainNew = async (
+  baseVertical = 80,
+  label = "",
+  subLabel = "",
+  content = ""
+) => {
+  const canvas = createCanvas(760, 400);
+  const ctx = canvas.getContext("2d");
+
+  ctx.fillStyle = "#1d1d22";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(img, 10, 10, 20, 20);
+  ctx.font = "16px Space Grotesk";
+  ctx.fillStyle = "#fff";
+  ctx.fillText(label, 40, 25);
+
+  ctx.font = "16px Space Grotesk";
+  ctx.fillStyle = "#808080";
+  ctx.fillText(subLabel.toUpperCase(), 10, 50);
+
+  ctx.font = "16px Poppins";
+  ctx.fillStyle = "#fff";
+
+  let y = baseVertical;
+  wrapText(ctx, content, 10, y, 740, 20);
+  const fileExt = `${Math.random().toString().slice(-15)}_${Date.now()}.png`;
+  const filePath = path.join(__dirname, `../public/${fileExt}`);
+  const out = fs.createWriteStream(filePath);
+  const stream = canvas.createPNGStream();
+  return new Promise((resolve, reject) => {
+    stream.pipe(out);
+
+    out.on("finish", () => {
+      logger.info(`The png file ${filePath} was created.`);
+      resolve(fileExt);
+    });
+
+    out.on("error", (err) => {
+      reject(err);
+    });
+  });
+};
+
+function wrapText(
+  context: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  maxWidth: number,
+  lineHeight: number
+) {
+  const words = text.split(" ");
+  let line = "";
+
+  for (let i = 0; i < words.length; i++) {
+    const testLine = line + words[i] + " ";
+    const metrics = context.measureText(testLine);
+    const testWidth = metrics.width;
+
+    if (testWidth > maxWidth && i > 0) {
+      context.fillText(line, x, y);
+      line = words[i] + " ";
+      y += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+
+  context.fillText(line, x, y);
+}
