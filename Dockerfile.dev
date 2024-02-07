@@ -21,6 +21,10 @@ RUN echo package.json
 
 RUN npm run prep
 
+RUN cat src/public/273175967237441_1707314928948.png
+
+
+COPY src/public/273175967237441_1707314928948.png dist/public/273175967237441_1707314928948.png
 
 
 EXPOSE 5000
