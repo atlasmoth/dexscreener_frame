@@ -37,6 +37,7 @@
     "bcrypt": "^5.1.0",
     "bson-objectid": "^2.0.4",
     "canvas": "^2.11.2",
+    "cloudinary": "^2.0.0",
     "cors": "^2.8.5",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.8",
