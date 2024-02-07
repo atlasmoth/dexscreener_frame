@@ -16,9 +16,12 @@ RUN npm install
 COPY . .
 
 
+RUN echo package.json 
+
+
 RUN npm run prep
 
-RUN echo package.json 
+
 
 EXPOSE 5000
 
