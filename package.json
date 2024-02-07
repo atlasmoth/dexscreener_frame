@@ -8,7 +8,7 @@
     "build": "npx tsc && npm run copy-assets",
     "start": "node dist/server",
     "prep": "npm install --dev && npm run build && npm prune --production",
-    "copy-assets": "cp src/public/851830738313542_1706996673307.png dist/public/851830738313542_1706996673307.png"
+    "copy-assets": "cp src/public/273175967237441_1707314928948.png dist/public/273175967237441_1707314928948.png"
   },
   "keywords": [],
   "author": "",

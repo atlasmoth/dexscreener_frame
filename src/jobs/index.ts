@@ -14,7 +14,7 @@ schedule.scheduleJob("DELETE IMAGES", "*/30 * * * *", () => {
   const filesPath = path.join(__dirname, "../public");
   logger.info(filesPath);
   const files = fs.readdirSync(filesPath);
-  const fileToKeep = "851830738313542_1706996673307.png";
+  const fileToKeep = "273175967237441_1707314928948.png";
 
   files.forEach((file) => {
     const filePath = `${filesPath}/${file}`;

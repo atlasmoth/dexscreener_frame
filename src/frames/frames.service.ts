@@ -3,7 +3,7 @@ import { Response } from "express";
 import axios from "axios";
 
 export const handleEmptySearch = (res: Response) => {
-  const imageUrl = "851830738313542_1706996673307.png";
+  const imageUrl = "273175967237441_1707314928948.png";
 
   const baseUrl = process.env.HOST as string;
 

@@ -30,7 +30,7 @@ export const continueFrame = errorInterceptor(async (req, res) => {
 
       return await framesService.handleSearch(
         res,
-        pairs.slice(0, 8),
+        pairs.slice(0, 6),
         inputText,
         1
       );
@@ -45,7 +45,7 @@ export const continueFrame = errorInterceptor(async (req, res) => {
         pairs = await framesService.fetchPairsSearch(searchInput);
         table[searchInput] = pairs;
       }
-      let firstPairs = pairs.slice(next * 8, next * 8 + 8);
+      let firstPairs = pairs.slice(next * 6, next * 6 + 6);
 
       if (req.body?.untrustedData?.buttonIndex === 2) {
         return await framesService.handleSearch(
@@ -55,9 +55,9 @@ export const continueFrame = errorInterceptor(async (req, res) => {
           next + 1
         );
       } else {
-        const secondBase = (next - 1) * 8;
+        const secondBase = (next - 1) * 6;
 
-        let secondPairs = pairs.slice(secondBase, secondBase + 8);
+        let secondPairs = pairs.slice(secondBase, secondBase + 6);
         let arrayIndex = Number(inputText) - 1;
         const pair = secondPairs[arrayIndex];
         return await framesService.selectItem(res, pair);
