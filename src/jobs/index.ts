@@ -24,7 +24,7 @@ schedule.scheduleJob("DELETE IMAGES", "*/30 * * * *", () => {
         if (unlinkErr) {
           logger.error("Error deleting file:", filePath, unlinkErr);
         } else {
-          logger.info("Deleted file:", filePath);
+          logger.info(`Deleted file: ${filePath}`);
         }
       });
     }
