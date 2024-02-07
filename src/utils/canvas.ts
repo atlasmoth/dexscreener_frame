@@ -56,7 +56,8 @@ export async function printMenuItems(pairs: Pair[], label: string) {
       p.quoteToken.symbol,
       p.priceUsd,
       90,
-      p.baseToken.name
+      p.baseToken.name,
+      p.chainId.toUpperCase()
     );
   });
 
@@ -85,28 +86,46 @@ function drawRow(
   quoteToken: string,
   price: number | string,
   baseVertical = 90,
-  baseTokenFull: string
+  baseTokenFull: string,
+  chain: string
 ) {
   price = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
   }).format((price as number) || 0);
-  const y = (index - 1) * 40 + baseVertical;
+  const y = (index - 1) * 45 + baseVertical;
   ctx.font = "400 18px Poppins";
   ctx.fillStyle = "#808080";
   ctx.fillText(`#${index}`, 10, y);
 
-  ctx.font = "400 18px Poppins";
-  ctx.fillStyle = "#fff";
-  ctx.fillText(baseToken.toUpperCase(), 50, y);
+  let x = 50;
 
   ctx.font = "400 18px Poppins";
+  ctx.fillStyle = "#fff";
+  ctx.fillText(baseToken.toUpperCase(), x, y);
+
+  x += ctx.measureText(baseToken.toUpperCase()).width;
+  ctx.font = "400 18px Poppins";
   ctx.fillStyle = "#808080";
-  ctx.fillText(
-    `/${quoteToken.toUpperCase()}`,
-    50 + ctx.measureText(baseToken.toUpperCase()).width,
-    y
-  );
+  ctx.fillText(`/${quoteToken.toUpperCase()}`, x, y);
+
+  x += 5 + ctx.measureText(quoteToken.toUpperCase()).width;
+
+  ctx.font = "400 10px Space Grotesk";
+  ctx.fillStyle = "#D6854E";
+  ctx.fillText(chain, 50, y - 17);
+
+  // ctx.setLineDash([5, 5]);
+  // ctx.lineWidth = 2;
+  // ctx.strokeStyle = "#F27C23";
+
+  // // Draw the box with a dotted border
+  // const boxX = 20;
+  // const boxY = 20;
+  // const boxWidth = 160;
+  // const boxHeight = 160;
+
+  // ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
 
   ctx.font = "400 18px Poppins";
   ctx.fillStyle = "#fff";
