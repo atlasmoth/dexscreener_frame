@@ -10,7 +10,8 @@ import path from "path";
 
 import fs from "fs";
 import { logger } from "./logger";
-import { svgContent } from "./logo";
+import { svgContent, SampleSvgContent } from "./logo";
+import { cloudinary } from "./storage";
 
 registerFont(path.resolve(process.cwd(), "grotesk.ttf"), {
   family: "Space Grotesk",
@@ -21,17 +22,29 @@ registerFont(path.resolve(process.cwd(), "poppins.ttf"), {
 });
 
 const buffer = Buffer.from(svgContent, "utf-8");
+const buffer2 = Buffer.from(SampleSvgContent, "utf-8");
 let img: Image;
+let img2: Image;
 
 export const initLogo = () =>
-  new Promise((resolve: any, reject) => {
-    loadImage(buffer)
-      .then((t) => {
-        img = t;
-        resolve("Success");
-      })
-      .catch(reject);
-  });
+  Promise.all([
+    new Promise((resolve: any, reject) => {
+      loadImage(buffer)
+        .then((t) => {
+          img = t;
+          resolve("Success");
+        })
+        .catch(reject);
+    }),
+    new Promise((resolve: any, reject) => {
+      loadImage(buffer2)
+        .then((t) => {
+          img2 = t;
+          resolve("Success");
+        })
+        .catch(reject);
+    }),
+  ]);
 
 export async function printMenuItems(pairs: Pair[], label: string) {
   const canvas = createCanvas(760, 400);
@@ -336,7 +349,7 @@ export const printMenu = async (
   ctx.fillStyle = "#1d1d22";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.drawImage(img, 10, 10, 20, 20);
+  ctx.drawImage(img2, 10, 10, 20, 20);
   ctx.font = "16px Space Grotesk";
   ctx.fillStyle = "#fff";
   ctx.fillText(label, 40, 25);
@@ -347,21 +360,13 @@ export const printMenu = async (
   items.forEach((t, index) => {
     drawRowNew(ctx, index + 1, 80, t.heading, t.selected);
   });
-  const fileExt = `${Math.random().toString().slice(-15)}_${Date.now()}.png`;
-  const filePath = path.join(__dirname, `../public/${fileExt}`);
-  const out = fs.createWriteStream(filePath);
-  const stream = canvas.createPNGStream();
-  return new Promise((resolve, reject) => {
-    stream.pipe(out);
-
-    out.on("finish", () => {
-      logger.info(`The png file ${filePath} was created.`);
-      resolve(fileExt);
-    });
-
-    out.on("error", (err) => {
-      reject(err);
-    });
+  const base64Image = canvas
+    .toDataURL("image/png")
+    .replace(/^data:image\/png;base64,/, "");
+  const fileExt = `${Math.random().toString().slice(-15)}_${Date.now()}`;
+  return cloudinary.uploader.upload(`data:image/png;base64,${base64Image}`, {
+    folder: "frames",
+    public_id: fileExt,
   });
 };
 
@@ -404,7 +409,7 @@ export const printMainNew = async (
 
   ctx.fillStyle = "#1d1d22";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(img, 10, 10, 20, 20);
+  ctx.drawImage(img2, 10, 10, 20, 20);
   ctx.font = "16px Space Grotesk";
   ctx.fillStyle = "#fff";
   ctx.fillText(label, 40, 25);
@@ -418,21 +423,13 @@ export const printMainNew = async (
 
   let y = baseVertical;
   wrapText(ctx, content, 10, y, 740, 20);
-  const fileExt = `${Math.random().toString().slice(-15)}_${Date.now()}.png`;
-  const filePath = path.join(__dirname, `../public/${fileExt}`);
-  const out = fs.createWriteStream(filePath);
-  const stream = canvas.createPNGStream();
-  return new Promise((resolve, reject) => {
-    stream.pipe(out);
-
-    out.on("finish", () => {
-      logger.info(`The png file ${filePath} was created.`);
-      resolve(fileExt);
-    });
-
-    out.on("error", (err) => {
-      reject(err);
-    });
+  const base64Image = canvas
+    .toDataURL("image/png")
+    .replace(/^data:image\/png;base64,/, "");
+  const fileExt = `${Math.random().toString().slice(-15)}_${Date.now()}`;
+  return cloudinary.uploader.upload(`data:image/png;base64,${base64Image}`, {
+    folder: "frames",
+    public_id: fileExt,
   });
 };
 

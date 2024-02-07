@@ -5,7 +5,13 @@ import path from "path";
 import * as middleware from "./middleware";
 import { logger } from "./utils/logger";
 import pinoHTTP from "pino-http";
-import { beginFrame, continueFrame } from "./frames/frames.controller";
+import {
+  beginFrame,
+  continueFrame,
+  createGuestFrame,
+  getGuestFrame,
+  updateGuestFrame,
+} from "./frames/frames.controller";
 import schedule from "./jobs";
 
 schedule;
@@ -24,6 +30,8 @@ app.use(
 );
 app.use(express.static(path.join(__dirname, "public")));
 
+app.route("/guest/frames/:frameId").get(getGuestFrame).post(updateGuestFrame);
+app.route("/guest/frames").post(createGuestFrame);
 app.route("/frames").get(beginFrame).post(continueFrame);
 
 app.use(middleware.notFound);

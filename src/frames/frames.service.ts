@@ -1,6 +1,13 @@
-import { Pair, printMain, printMenuItems } from "../utils/canvas";
+import {
+  Pair,
+  printMain,
+  printMainNew,
+  printMenu,
+  printMenuItems,
+} from "../utils/canvas";
 import { Response } from "express";
 import axios from "axios";
+import { FrameData, FrameDataItem } from "./frames.interface";
 
 export const handleEmptySearch = (res: Response) => {
   const imageUrl = "273175967237441_1707314928948.png";
@@ -153,4 +160,31 @@ export const selectItem = async (res: Response, pair: Pair) => {
           `
     )
     .end();
+};
+
+export const persistToCloudinary = async (
+  label: string,
+  subLabel: string,
+  items: FrameData
+) => {
+  return Promise.all([
+    ...items.map(async (item, index, array): Promise<FrameDataItem> => {
+      const menuUrl = await printMenu(
+        label,
+        subLabel,
+        array.map((t, mapIndex) => ({ ...t, selected: index === mapIndex }))
+      );
+      const pageUrl = await printMainNew(
+        80,
+        item.heading,
+        item.subheading,
+        item.text
+      );
+      return {
+        ...item,
+        imageUrl: menuUrl.secure_url,
+        contentImageUrl: pageUrl.secure_url,
+      };
+    }),
+  ]);
 };
