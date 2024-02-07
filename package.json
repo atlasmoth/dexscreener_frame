@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --esm src/server.ts",
-    "build": "npx tsc && npm run copy-assets",
+    "build": "npx tsc",
     "start": "node dist/server",
-    "prep": "npm install --dev && npm run build && npm prune --production",
+    "prep": "npm install --dev && npm run build && npm prune --production && npm run copy-assets",
     "copy-assets": "cp src/public/273175967237441_1707314928948.png dist/public/273175967237441_1707314928948.png"
   },
   "keywords": [],
